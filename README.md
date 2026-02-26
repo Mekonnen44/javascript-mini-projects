@@ -1,11 +1,13 @@
 # JavaScript Mini Projects
 
-This repository contains beginner-friendly JavaScript projects.
+A collection of beginner-friendly JavaScript applications to practice DOM manipulation and UI logic.
 
-Projects:
+## Projects
 - Calculator
 - Todo App
 - Digital Clock
 
-Purpose:
-To practice DOM manipulation and core JavaScript logic.
+## Features
+- DOM interaction
+- Event handling
+- Real-time updates
