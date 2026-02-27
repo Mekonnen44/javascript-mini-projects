@@ -3,18 +3,32 @@
 <head>
   <title>Todo App</title>
 </head>
+
 <style>
   body { font-family: Arial; padding: 40px; }
   input { padding: 8px; }
   button { margin-left: 10px; }
   li { margin-top: 10px; }
+  .completed { text-decoration: line-through; color: gray; }
 </style>
+
 <body>
+
   <h2>Todo List</h2>
+
   <input id="taskInput" placeholder="New task" />
   <button onclick="addTask()">Add</button>
+
+  <br><br>
+
+  <!-- ✅ FILTER BUTTONS -->
+  <button onclick="setFilter('all')">All</button>
+  <button onclick="setFilter('active')">Active</button>
+  <button onclick="setFilter('completed')">Completed</button>
+
   <ul id="list"></ul>
 
   <script src="script.js"></script>
+
 </body>
 </html>
