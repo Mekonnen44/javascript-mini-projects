@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import "./App.css";
 
 function App() {
@@ -6,29 +7,44 @@ function App() {
   const [input, setInput] = useState("");
   const [filter, setFilter] = useState("all");
 
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/api/todos/")
+      .then((res) => {
+        setTodos(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const addTask = () => {
     if (input.trim() === "") return;
 
-    const newTask = {
-      id: Date.now(),
-      text: input,
-      completed: false,
-    };
-
-    setTodos([...todos, newTask]);
-    setInput("");
+    axios
+      .post("http://127.0.0.1:8000/api/todos/", {
+        title: input,
+        completed: false,
+      })
+      .then((res) => {
+        setTodos([res.data, ...todos]);
+        setInput("");
+      });
   };
 
-  const toggleTask = (id) => {
-    setTodos(
-      todos.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
-    );
+  const toggleTask = (task) => {
+    axios
+      .patch(`http://127.0.0.1:8000/api/todos/${task.id}/`, {
+        completed: !task.completed,
+      })
+      .then((res) => {
+        setTodos(todos.map((t) => (t.id === task.id ? res.data : t)));
+      });
   };
 
   const deleteTask = (id) => {
-    setTodos(todos.filter((t) => t.id !== id));
+    axios.delete(`http://127.0.0.1:8000/api/todos/${id}/`).then(() => {
+      setTodos(todos.filter((t) => t.id !== id));
+    });
   };
 
   const filteredTodos = todos.filter((t) => {
@@ -37,14 +53,7 @@ function App() {
     return true;
   });
 
-  useEffect(() => {
-    const saved = localStorage.getItem("todos");
-    if (saved) setTodos(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+  
 
   return (
     <div className="app">
@@ -90,9 +99,7 @@ function App() {
               key={task.id}
               className={`todo-item ${task.completed ? "completed" : ""}`}
             >
-              <span onClick={() => toggleTask(task.id)}>
-                {task.text}
-              </span>
+              <span onClick={() => toggleTask(task)}>{task.title}</span>
 
               <button
                 className="delete-btn"
