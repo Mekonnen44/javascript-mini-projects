@@ -147,6 +147,21 @@ body {
   color: #ff6b6b;
 }
 
+.status {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.empty {
+  text-align: center;
+  opacity: 0.7;
+}
+
 /* Footer */
 .footer {
   margin-top: 15px;

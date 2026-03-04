@@ -1,50 +1,50 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "./App.css";
+import TodoInput from "./components/TodoInput";
+import TodoList from "./components/TodoList";
+import { getTodos, createTodo, updateTodo, deleteTodo } from "./api/todoApi";
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
 
+  // Fetch todos
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/api/todos/")
+    getTodos()
       .then((res) => {
         setTodos(res.data);
-        console.log(res.data);
+        setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch(() => {
+        setError("Failed to load tasks.");
+        setLoading(false);
+      });
   }, []);
 
-  const addTask = () => {
-    if (input.trim() === "") return;
-
-    axios
-      .post("http://127.0.0.1:8000/api/todos/", {
-        title: input,
-        completed: false,
-      })
+  const addTask = (title) => {
+    createTodo({ title, completed: false })
       .then((res) => {
         setTodos([res.data, ...todos]);
-        setInput("");
-      });
+      })
+      .catch(() => setError("Failed to add task."));
   };
 
   const toggleTask = (task) => {
-    axios
-      .patch(`http://127.0.0.1:8000/api/todos/${task.id}/`, {
-        completed: !task.completed,
-      })
+    updateTodo(task.id, { completed: !task.completed })
       .then((res) => {
         setTodos(todos.map((t) => (t.id === task.id ? res.data : t)));
-      });
+      })
+      .catch(() => setError("Failed to update task."));
   };
 
-  const deleteTask = (id) => {
-    axios.delete(`http://127.0.0.1:8000/api/todos/${id}/`).then(() => {
-      setTodos(todos.filter((t) => t.id !== id));
-    });
+  const removeTask = (id) => {
+    deleteTodo(id)
+      .then(() => {
+        setTodos(todos.filter((t) => t.id !== id));
+      })
+      .catch(() => setError("Failed to delete task."));
   };
 
   const filteredTodos = todos.filter((t) => {
@@ -53,24 +53,15 @@ function App() {
     return true;
   });
 
-  
+  if (loading) return <p className="status">Loading tasks...</p>;
+  if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="app">
       <div className="card">
         <h1 className="title"> Task Manager</h1>
 
-        <div className="input-group">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Add a new task..."
-            onKeyDown={(e) => e.key === "Enter" && addTask()}
-          />
-          <button className="add-btn" onClick={addTask}>
-            Add
-          </button>
-        </div>
+        <TodoInput onAdd={addTask} />
 
         <div className="filters">
           <button
@@ -93,23 +84,7 @@ function App() {
           </button>
         </div>
 
-        <ul className="todo-list">
-          {filteredTodos.map((task) => (
-            <li
-              key={task.id}
-              className={`todo-item ${task.completed ? "completed" : ""}`}
-            >
-              <span onClick={() => toggleTask(task)}>{task.title}</span>
-
-              <button
-                className="delete-btn"
-                onClick={() => deleteTask(task.id)}
-              >
-                ✕
-              </button>
-            </li>
-          ))}
-        </ul>
+        <TodoList todos={filteredTodos} onToggle={toggleTask} onDelete={removeTask} />
 
         <div className="footer">
           {todos.filter((t) => !t.completed).length} tasks left
