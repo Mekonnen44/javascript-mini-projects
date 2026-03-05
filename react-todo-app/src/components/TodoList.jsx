@@ -1,6 +1,6 @@
 import TodoItem from "./TodoItem";
 
-function TodoList({ todos, onToggle, onDelete }) {
+function TodoList({ todos, onToggle, onDelete, onEdit }) {
   if (!todos.length) {
     return <p className="empty">No tasks yet 🚀</p>;
   }
@@ -13,6 +13,7 @@ function TodoList({ todos, onToggle, onDelete }) {
           task={task}
           onToggle={onToggle}
           onDelete={onDelete}
+          onEdit={onEdit}
         />
       ))}
     </ul>

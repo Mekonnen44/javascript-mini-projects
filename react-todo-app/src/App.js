@@ -1,57 +1,148 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./App.css";
 import TodoInput from "./components/TodoInput";
 import TodoList from "./components/TodoList";
-import { getTodos, createTodo, updateTodo, deleteTodo } from "./api/todoApi";
+import {
+  getTodos,
+  createTodo,
+  updateTodo,
+  deleteTodo,
+} from "./api/todoApi";
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
 
   // Fetch todos
   useEffect(() => {
-    getTodos()
-      .then((res) => {
+    const fetchTodos = async () => {
+      try {
+        const res = await getTodos();
         setTodos(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
+      } catch {
         setError("Failed to load tasks.");
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchTodos();
   }, []);
 
-  const addTask = (title) => {
-    createTodo({ title, completed: false })
-      .then((res) => {
-        setTodos([res.data, ...todos]);
-      })
-      .catch(() => setError("Failed to add task."));
+  // Add task
+  const addTask = async (data) => {
+    try {
+      setError(null);
+      const res = await createTodo(data);
+      setTodos((prev) => [res.data, ...prev]);
+    } catch {
+      setError("Failed to add task.");
+    }
   };
 
-  const toggleTask = (task) => {
-    updateTodo(task.id, { completed: !task.completed })
-      .then((res) => {
-        setTodos(todos.map((t) => (t.id === task.id ? res.data : t)));
-      })
-      .catch(() => setError("Failed to update task."));
+  // Toggle task
+  const toggleTask = async (task) => {
+    try {
+      setError(null);
+      const res = await updateTodo(task.id, {
+        completed: !task.completed,
+      });
+
+      setTodos((prev) =>
+        prev.map((t) => (t.id === task.id ? res.data : t))
+      );
+    } catch {
+      setError("Failed to update task.");
+    }
   };
 
-  const removeTask = (id) => {
-    deleteTodo(id)
-      .then(() => {
-        setTodos(todos.filter((t) => t.id !== id));
-      })
-      .catch(() => setError("Failed to delete task."));
+  // Edit task
+  const editTask = async (id, data) => {
+    try {
+      setError(null);
+      const res = await updateTodo(id, data);
+
+      setTodos((prev) =>
+        prev.map((t) => (t.id === id ? res.data : t))
+      );
+    } catch {
+      setError("Failed to edit task.");
+    }
   };
 
-  const filteredTodos = todos.filter((t) => {
-    if (filter === "active") return !t.completed;
-    if (filter === "completed") return t.completed;
-    return true;
-  });
+  // Delete task
+  const removeTask = async (id) => {
+    try {
+      setError(null);
+      await deleteTodo(id);
+
+      setTodos((prev) => prev.filter((t) => t.id !== id));
+    } catch {
+      setError("Failed to delete task.");
+    }
+  };
+
+  // Mark all complete
+  const markAllComplete = async () => {
+    try {
+      setActionLoading(true);
+      setError(null);
+
+      const incomplete = todos.filter((t) => !t.completed);
+
+      await Promise.all(
+        incomplete.map((t) =>
+          updateTodo(t.id, { completed: true })
+        )
+      );
+
+      setTodos((prev) =>
+        prev.map((t) => ({ ...t, completed: true }))
+      );
+    } catch {
+      setError("Failed to mark all complete.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Clear completed
+  const clearCompleted = async () => {
+    try {
+      setActionLoading(true);
+      setError(null);
+
+      const completed = todos.filter((t) => t.completed);
+
+      await Promise.all(
+        completed.map((t) => deleteTodo(t.id))
+      );
+
+      setTodos((prev) => prev.filter((t) => !t.completed));
+    } catch {
+      setError("Failed to clear completed tasks.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Sort + Filter (memoized)
+  const filteredTodos = useMemo(() => {
+    const sorted = [...todos].sort((a, b) => {
+      if (!a.due_date) return 1;
+      if (!b.due_date) return -1;
+      return new Date(a.due_date) - new Date(b.due_date);
+    });
+
+    return sorted.filter((t) => {
+      if (filter === "active") return !t.completed;
+      if (filter === "completed") return t.completed;
+      return true;
+    });
+  }, [todos, filter]);
 
   if (loading) return <p className="status">Loading tasks...</p>;
   if (error) return <p className="error">{error}</p>;
@@ -59,7 +150,7 @@ function App() {
   return (
     <div className="app">
       <div className="card">
-        <h1 className="title"> Task Manager</h1>
+        <h1 className="title">Task Manager</h1>
 
         <TodoInput onAdd={addTask} />
 
@@ -83,8 +174,27 @@ function App() {
             Completed
           </button>
         </div>
+      
+        <button
+          onClick={markAllComplete}
+          disabled={actionLoading}
+        >
+          Mark All Complete
+        </button>
 
-        <TodoList todos={filteredTodos} onToggle={toggleTask} onDelete={removeTask} />
+        <button
+          onClick={clearCompleted}
+          disabled={actionLoading}
+        >
+          Clear Completed
+        </button>
+
+        <TodoList
+          todos={filteredTodos}
+          onToggle={toggleTask}
+          onDelete={removeTask}
+          onEdit={editTask}
+        />
 
         <div className="footer">
           {todos.filter((t) => !t.completed).length} tasks left

@@ -1,4 +1,5 @@
-/* Global Reset */
+/* ---------------- GLOBAL RESET ---------------- */
+
 * {
   margin: 0;
   padding: 0;
@@ -14,7 +15,8 @@ body {
   justify-content: center;
 }
 
-/* App Wrapper */
+/* ---------------- APP WRAPPER ---------------- */
+
 .app {
   width: 100%;
   padding: 20px;
@@ -22,29 +24,36 @@ body {
   justify-content: center;
 }
 
-/* Card */
+/* ---------------- CARD ---------------- */
+
 .card {
   width: 100%;
-  max-width: 500px;
-  max-height: 80vh; 
+  max-width: 620px;
+  max-height: 85vh;
   display: flex;
   flex-direction: column;
+
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(16px);
+
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
   color: white;
 }
 
-/* Title */
+/* ---------------- TITLE ---------------- */
+
 .title {
   text-align: center;
   margin-bottom: 25px;
   font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-/* Input Section */
+/* ---------------- INPUT SECTION ---------------- */
+
 .input-group {
   display: flex;
   gap: 10px;
@@ -54,44 +63,59 @@ body {
 .input-group input {
   flex: 1;
   padding: 12px 15px;
+
   border-radius: 10px;
   border: none;
   outline: none;
+
   font-size: 14px;
 }
+
+.input-group input[type="datetime-local"] {
+  flex: 1.2;
+}
+
+/* ---------------- ADD BUTTON ---------------- */
 
 .add-btn {
   padding: 12px 20px;
   border-radius: 10px;
   border: none;
+
   cursor: pointer;
   background: white;
   color: #764ba2;
+
   font-weight: 600;
   transition: 0.3s ease;
 }
 
 .add-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
 }
 
-/* Filters */
+/* ---------------- FILTER BUTTONS ---------------- */
+
 .filters {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .filters button {
   flex: 1;
   margin: 0 5px;
   padding: 8px;
+
   border-radius: 8px;
   border: none;
+
   cursor: pointer;
+
   background: rgba(255, 255, 255, 0.2);
   color: white;
+
   transition: 0.3s;
 }
 
@@ -101,44 +125,122 @@ body {
   color: #764ba2;
 }
 
-/* Todo List */
+/* ---------------- ACTION BUTTONS ---------------- */
+
+.card > button {
+  margin-bottom: 10px;
+
+  padding: 10px;
+
+  border-radius: 8px;
+  border: none;
+
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.card > button:hover {
+  background: white;
+  color: #764ba2;
+}
+
+.card > button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------------- TODO LIST ---------------- */
+
 .todo-list {
   list-style: none;
   overflow-y: auto;
   flex: 1;
   padding-right: 5px;
+  margin-top: 10px;
 }
+
+/* ---------------- TODO ITEM ---------------- */
 
 .todo-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
   padding: 12px;
   border-radius: 10px;
+
   margin-bottom: 10px;
+
   background: rgba(255, 255, 255, 0.15);
-  transition: 0.3s;
+
+  transition: 0.25s;
 }
 
 .todo-item:hover {
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* task text */
+
 .todo-item span {
+  flex: 1;
   cursor: pointer;
 }
+
+/* completed state */
 
 .todo-item.completed span {
   text-decoration: line-through;
   opacity: 0.6;
 }
 
-/* Delete Button */
+/* due date */
+
+.todo-item small {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* ---------------- EDIT INPUT ---------------- */
+
+.todo-item input {
+  flex: 1;
+
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+
+/* ---------------- EDIT BUTTON ---------------- */
+
+.todo-item button {
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: none;
+
+  cursor: pointer;
+
+  background: white;
+  color: #764ba2;
+
+  font-size: 12px;
+}
+
+/* ---------------- DELETE BUTTON ---------------- */
+
 .delete-btn {
   background: transparent;
   border: none;
+
   color: white;
   font-size: 16px;
+
   cursor: pointer;
   transition: 0.2s;
 }
@@ -147,28 +249,35 @@ body {
   color: #ff6b6b;
 }
 
+/* ---------------- STATES ---------------- */
+
 .status {
   text-align: center;
   margin-top: 20px;
+  color: white;
 }
 
 .error {
-  color: red;
+  color: #ff6b6b;
   text-align: center;
 }
 
 .empty {
   text-align: center;
   opacity: 0.7;
+  margin-top: 10px;
 }
 
-/* Footer */
+/* ---------------- FOOTER ---------------- */
+
 .footer {
   margin-top: 15px;
   text-align: center;
   font-size: 14px;
   opacity: 0.8;
 }
+
+/* ---------------- SCROLLBAR ---------------- */
 
 .todo-list::-webkit-scrollbar {
   width: 6px;
@@ -185,4 +294,22 @@ body {
 
 .todo-list::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+
+@media (max-width: 600px) {
+
+  .card {
+    padding: 20px;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  .filters button {
+    font-size: 12px;
+  }
+
 }
