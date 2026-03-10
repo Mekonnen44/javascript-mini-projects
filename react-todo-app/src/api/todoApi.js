@@ -1,13 +1,23 @@
 import axios from "axios";
+import { getToken } from "../utils/auth";
 
-const API_URL = "http://127.0.0.1:8000/api/todos/";
+const API_BASE = process.env.REACT_APP_API_BASE;
 
-export const getTodos = () => axios.get(API_URL);
+const api = axios.create({
+  baseURL: API_BASE,
+});
 
-export const createTodo = (data) => axios.post(API_URL, data);
+api.interceptors.request.use((config) => {
+  const token = getToken();
 
-export const updateTodo = (id, data) =>
-  axios.patch(`${API_URL}${id}/`, data);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
-export const deleteTodo = (id) =>
-  axios.delete(`${API_URL}${id}/`);
+  return config;
+});
+
+export const getTodos = () => api.get("/todos/");
+export const createTodo = (data) => api.post("/todos/", data);
+export const updateTodo = (id, data) => api.patch(`/todos/${id}/`, data);
+export const deleteTodo = (id) => api.delete(`/todos/${id}/`);
