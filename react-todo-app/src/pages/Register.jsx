@@ -21,8 +21,8 @@ function Register() {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
+    <div className="auth-card">
+      <h2>Create Account</h2>
 
       <input
         placeholder="Username"
@@ -35,7 +35,9 @@ function Register() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button onClick={handleRegister}>Register</button>
+      <button className="primary-btn" onClick={handleRegister}>
+        Register
+      </button>
     </div>
   );
 }

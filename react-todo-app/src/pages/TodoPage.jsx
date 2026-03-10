@@ -5,12 +5,7 @@ import "./../App.css";
 import TodoInput from "../components/TodoInput";
 import TodoList from "../components/TodoList";
 
-import {
-  getTodos,
-  createTodo,
-  updateTodo,
-  deleteTodo,
-} from "../api/todoApi";
+import { getTodos, createTodo, updateTodo, deleteTodo } from "../api/todoApi";
 
 import { removeToken } from "../utils/auth";
 
@@ -64,9 +59,7 @@ function TodoPage() {
         completed: !task.completed,
       });
 
-      setTodos((prev) =>
-        prev.map((t) => (t.id === task.id ? res.data : t))
-      );
+      setTodos((prev) => prev.map((t) => (t.id === task.id ? res.data : t)));
     } catch {
       setError("Failed to update task.");
     }
@@ -78,9 +71,7 @@ function TodoPage() {
       setError(null);
       const res = await updateTodo(id, data);
 
-      setTodos((prev) =>
-        prev.map((t) => (t.id === id ? res.data : t))
-      );
+      setTodos((prev) => prev.map((t) => (t.id === id ? res.data : t)));
     } catch {
       setError("Failed to edit task.");
     }
@@ -107,14 +98,10 @@ function TodoPage() {
       const incomplete = todos.filter((t) => !t.completed);
 
       await Promise.all(
-        incomplete.map((t) =>
-          updateTodo(t.id, { completed: true })
-        )
+        incomplete.map((t) => updateTodo(t.id, { completed: true })),
       );
 
-      setTodos((prev) =>
-        prev.map((t) => ({ ...t, completed: true }))
-      );
+      setTodos((prev) => prev.map((t) => ({ ...t, completed: true })));
     } catch {
       setError("Failed to mark all complete.");
     } finally {
@@ -130,9 +117,7 @@ function TodoPage() {
 
       const completed = todos.filter((t) => t.completed);
 
-      await Promise.all(
-        completed.map((t) => deleteTodo(t.id))
-      );
+      await Promise.all(completed.map((t) => deleteTodo(t.id)));
 
       setTodos((prev) => prev.filter((t) => !t.completed));
     } catch {
@@ -157,8 +142,13 @@ function TodoPage() {
     });
   }, [todos, filter]);
 
-  if (loading) return <p className="status">Loading tasks...</p>;
-
+  if (loading) {
+    return (
+      <div className="status">
+        <p>Loading tasks...</p>
+      </div>
+    );
+  }
   return (
     <div className="app">
       <div className="card">
@@ -196,17 +186,11 @@ function TodoPage() {
           </button>
         </div>
 
-        <button
-          onClick={markAllComplete}
-          disabled={actionLoading}
-        >
+        <button onClick={markAllComplete} disabled={actionLoading}>
           Mark All Complete
         </button>
 
-        <button
-          onClick={clearCompleted}
-          disabled={actionLoading}
-        >
+        <button onClick={clearCompleted} disabled={actionLoading}>
           Clear Completed
         </button>
 

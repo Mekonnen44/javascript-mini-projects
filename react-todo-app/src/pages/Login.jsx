@@ -21,7 +21,7 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="auth-card">
       <h2>Login</h2>
 
       <input
@@ -35,7 +35,9 @@ function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button onClick={handleLogin}>Login</button>
+      <button className="primary-btn" onClick={handleLogin}>
+        Login
+      </button>
     </div>
   );
 }

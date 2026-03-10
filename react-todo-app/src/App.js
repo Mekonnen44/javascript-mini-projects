@@ -4,24 +4,29 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import TodoPage from "./pages/TodoPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
+      <Layout>
+        <Routes>
 
-        <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <TodoPage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          <Route path="/register" element={<Register />} />
+
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <TodoPage />
+              </ProtectedRoute>
+            }
+          />
+
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 }
