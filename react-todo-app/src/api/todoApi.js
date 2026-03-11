@@ -17,6 +17,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+
+    if (error.response?.status === 401) {
+      localStorage.removeItem("access_token");
+      window.location.href = "/login";
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const getTodos = () => api.get("/todos/");
 export const createTodo = (data) => api.post("/todos/", data);
 export const updateTodo = (id, data) => api.patch(`/todos/${id}/`, data);

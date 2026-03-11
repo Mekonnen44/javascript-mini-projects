@@ -10,29 +10,32 @@ function Layout({ children }) {
   };
 
   return (
-    <div>
-
+    <div className="app-shell">
       <nav className="navbar">
-        <h2 className="logo">TaskManager</h2>
+        <div className="brand">
+          <div className="brand-mark" aria-hidden="true"></div>
+          <h2 className="logo">TaskManager</h2>
+        </div>
 
-        <div>
+        <div className="nav-actions">
           {isAuthenticated() ? (
-            <button className="nav-btn" onClick={logout}>
+            <button className="btn btn-danger" onClick={logout}>
               Logout
             </button>
           ) : (
             <>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+              <Link to="/register" className="nav-link nav-link-primary">
+                Register
+              </Link>
             </>
           )}
         </div>
       </nav>
 
-      <main className="container">
-        {children}
-      </main>
-
+      <main className="container">{children}</main>
     </div>
   );
 }

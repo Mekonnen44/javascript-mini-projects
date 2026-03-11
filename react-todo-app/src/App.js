@@ -1,10 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import TodoPage from "./pages/TodoPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -26,6 +30,7 @@ function App() {
           />
 
         </Routes>
+         <ToastContainer position="top-right" />
       </Layout>
     </BrowserRouter>
   );

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -12,30 +13,43 @@ function Register() {
     try {
       await registerUser({ username, password });
 
-      alert("Account created!");
+      toast.success("Account created successfully!");
 
       navigate("/login");
     } catch {
-      alert("Registration failed");
+      toast.error("Registration failed.");
     }
   };
 
   return (
     <div className="auth-card">
-      <h2>Create Account</h2>
+      <div>
+        <h2>Create account</h2>
+        <p className="auth-subtitle">Start organizing your tasks today.</p>
+      </div>
 
-      <input
-        placeholder="Username"
-        onChange={(e) => setUsername(e.target.value)}
-      />
+      <label className="field">
+        <span>Username</span>
+        <input
+          placeholder="you@example.com"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </label>
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <label className="field">
+        <span>Password</span>
+        <input
+          type="password"
+          placeholder="Create a password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </label>
 
-      <button className="primary-btn" onClick={handleRegister}>
+      <button
+        className="btn btn-primary"
+        type="button"
+        onClick={handleRegister}
+      >
         Register
       </button>
     </div>

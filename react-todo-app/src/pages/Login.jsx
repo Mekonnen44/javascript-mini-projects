@@ -2,6 +2,7 @@ import { useState } from "react";
 import { loginUser } from "../api/authApi";
 import { setToken } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -14,28 +15,39 @@ function Login() {
 
       setToken(res.data.access);
 
+      toast.success("Login successful!");
+
       navigate("/");
     } catch {
-      alert("Login failed");
+      toast.error("Invalid username or password");
     }
   };
 
   return (
     <div className="auth-card">
-      <h2>Login</h2>
+      <div>
+        <h2>Welcome back</h2>
+        <p className="auth-subtitle">Log in to access your tasks.</p>
+      </div>
 
-      <input
-        placeholder="Username"
-        onChange={(e) => setUsername(e.target.value)}
-      />
+      <label className="field">
+        <span>Username</span>
+        <input
+          placeholder="you@example.com"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </label>
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <label className="field">
+        <span>Password</span>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </label>
 
-      <button className="primary-btn" onClick={handleLogin}>
+      <button className="btn btn-primary" type="button" onClick={handleLogin}>
         Login
       </button>
     </div>

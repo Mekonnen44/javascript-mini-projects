@@ -1,28 +1,18 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import "./../App.css";
 
 import TodoInput from "../components/TodoInput";
 import TodoList from "../components/TodoList";
 
 import { getTodos, createTodo, updateTodo, deleteTodo } from "../api/todoApi";
 
-import { removeToken } from "../utils/auth";
+import { toast } from "react-toastify";
 
 function TodoPage() {
-  const navigate = useNavigate();
-
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all");
-
-  // Logout
-  const logout = () => {
-    removeToken();
-    navigate("/login");
-  };
 
   // Fetch todos
   useEffect(() => {
@@ -46,8 +36,10 @@ function TodoPage() {
       setError(null);
       const res = await createTodo(data);
       setTodos((prev) => [res.data, ...prev]);
+      toast.success("Task added");
     } catch {
       setError("Failed to add task.");
+      toast.error("Failed to add task.");
     }
   };
 
@@ -62,6 +54,7 @@ function TodoPage() {
       setTodos((prev) => prev.map((t) => (t.id === task.id ? res.data : t)));
     } catch {
       setError("Failed to update task.");
+      toast.error("Failed to update task.");
     }
   };
 
@@ -72,7 +65,9 @@ function TodoPage() {
       const res = await updateTodo(id, data);
 
       setTodos((prev) => prev.map((t) => (t.id === id ? res.data : t)));
+      toast.success("Task updated");
     } catch {
+      toast.error("Failed to edit task.");
       setError("Failed to edit task.");
     }
   };
@@ -84,8 +79,10 @@ function TodoPage() {
       await deleteTodo(id);
 
       setTodos((prev) => prev.filter((t) => t.id !== id));
+      toast.success("Task deleted");
     } catch {
       setError("Failed to delete task.");
+      toast.error("Failed to delete task.");
     }
   };
 
@@ -142,6 +139,10 @@ function TodoPage() {
     });
   }, [todos, filter]);
 
+  const totalCount = todos.length;
+  const remainingCount = todos.filter((t) => !t.completed).length;
+  const completedCount = totalCount - remainingCount;
+
   if (loading) {
     return (
       <div className="status">
@@ -152,11 +153,12 @@ function TodoPage() {
   return (
     <div className="app">
       <div className="card">
-        <div className="header">
-          <h1 className="title">Task Manager</h1>
-          <button onClick={logout} className="logout-btn">
-            Logout
-          </button>
+        <div className="card-header">
+          <div>
+            <p className="eyebrow">Daily Focus</p>
+            <h1 className="title">Task Manager</h1>
+            <p className="subtitle">Keep your priorities clear and visible.</p>
+          </div>
         </div>
 
         {error && <p className="error">{error}</p>}
@@ -165,34 +167,52 @@ function TodoPage() {
 
         <div className="filters">
           <button
+            type="button"
             className={filter === "all" ? "active" : ""}
             onClick={() => setFilter("all")}
+            aria-pressed={filter === "all"}
           >
             All
           </button>
 
           <button
+            type="button"
             className={filter === "active" ? "active" : ""}
             onClick={() => setFilter("active")}
+            aria-pressed={filter === "active"}
           >
             Active
           </button>
 
           <button
+            type="button"
             className={filter === "completed" ? "active" : ""}
             onClick={() => setFilter("completed")}
+            aria-pressed={filter === "completed"}
           >
             Completed
           </button>
         </div>
 
-        <button onClick={markAllComplete} disabled={actionLoading}>
-          Mark All Complete
-        </button>
+        <div className="toolbar">
+          <button
+            type="button"
+            onClick={markAllComplete}
+            disabled={actionLoading || remainingCount === 0}
+            className="btn btn-ghost"
+          >
+            Mark All Complete
+          </button>
 
-        <button onClick={clearCompleted} disabled={actionLoading}>
-          Clear Completed
-        </button>
+          <button
+            type="button"
+            onClick={clearCompleted}
+            disabled={actionLoading || completedCount === 0}
+            className="btn btn-ghost"
+          >
+            Clear Completed
+          </button>
+        </div>
 
         <TodoList
           todos={filteredTodos}
@@ -201,8 +221,10 @@ function TodoPage() {
           onEdit={editTask}
         />
 
-        <div className="footer">
-          {todos.filter((t) => !t.completed).length} tasks left
+        <div className="summary">
+          <span>{remainingCount} remaining</span>
+          <span>{completedCount} completed</span>
+          <span>{totalCount} total</span>
         </div>
       </div>
     </div>
