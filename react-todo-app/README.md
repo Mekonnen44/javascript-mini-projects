@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# Task Manager – Fullstack Todo Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern fullstack task management application built with **React and Django REST Framework**.
 
-## Available Scripts
+Users can register, log in, and manage their personal tasks securely using JWT authentication.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Live Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Frontend
+https://javascript-mini-projects-beta.vercel.app/
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Backend API
+https://todo-django-backend-dtjg.onrender.com/
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## ✨ Features
 
-### `npm run build`
+* User registration and login
+* JWT authentication
+* Protected API endpoints
+* Create tasks
+* Edit tasks
+* Delete tasks
+* Mark tasks as complete
+* Filter tasks (All / Active / Completed)
+* Due date support
+* Toast notifications
+* Automatic logout on token expiration
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🧰 Tech Stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Frontend
 
-### `npm run eject`
+* React
+* Axios
+* React Router
+* React Toastify
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Backend
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* Django
+* Django REST Framework
+* SimpleJWT Authentication
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Deployment
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* Vercel (Frontend)
+* Render (Backend)
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📂 Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Frontend
 
-### Code Splitting
+src
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* api
+* components
+* pages
+* utils
 
-### Analyzing the Bundle Size
+Backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+todo_backend
 
-### Making a Progressive Web App
+* accounts
+* todos
+* settings
+* API endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 🔑 API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Authentication
 
-### Deployment
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/token/refresh
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Todos
 
-### `npm run build` fails to minify
+GET /api/todos/
+POST /api/todos/
+PATCH /api/todos/{id}/
+DELETE /api/todos/{id}/
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## 💻 Run Locally
+
+Frontend
+
+npm install
+npm start
+
+Backend
+
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+
+---
+
+## 📸 Screenshots
+
+<div align="center" style="display:flex; flex-wrap:wrap; gap: 16px; justify-content: center;">
+    <img src="./public/loginpage.png" height="450" alt="login page" />
+    <img src="./public/registerpage.png" height="450" alt="register page" />
+    <img src="./public/homepage.png" height="450" alt="home page" />
+    <img src="./public/addedtask.png" height="450" alt="task added" />
+</div>
+
+---
+
+## 📌 Future Improvements
+
+* Task categories
+* Priority levels
+* Email notifications
+* Drag-and-drop tasks
+* Mobile responsive UI
